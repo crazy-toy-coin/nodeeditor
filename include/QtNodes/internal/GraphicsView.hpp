@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QGraphicsView>
+#include <QDrag>
 
 #include "Export.hpp"
 
@@ -61,6 +62,8 @@ public Q_SLOTS:
 Q_SIGNALS:
     void scaleChanged(double scale);
 
+    void dropObject(const QPointF& pos, const QString& path);
+
 protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
 
@@ -77,6 +80,12 @@ protected:
     void drawBackground(QPainter *painter, const QRectF &r) override;
 
     void showEvent(QShowEvent *event) override;
+
+    void dragEnterEvent(QDragEnterEvent *event) override;
+
+    void dragMoveEvent(QDragMoveEvent *event) override;
+
+    void dropEvent(QDropEvent *event) override;
 
 protected:
     BasicGraphicsScene *nodeScene();

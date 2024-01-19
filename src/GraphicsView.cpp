@@ -55,6 +55,8 @@ GraphicsView::GraphicsView(QWidget *parent)
     // re-calculation when expanding the all QGraphicsItems common rect.
     int maxSize = 32767;
     setSceneRect(-maxSize, -maxSize, (maxSize * 2), (maxSize * 2));
+
+    this->setAcceptDrops(true);
 }
 
 GraphicsView::GraphicsView(BasicGraphicsScene *scene, QWidget *parent)
@@ -386,6 +388,22 @@ void GraphicsView::showEvent(QShowEvent *event)
     QGraphicsView::showEvent(event);
 
     centerScene();
+}
+
+void QtNodes::GraphicsView::dragEnterEvent(QDragEnterEvent *event)
+{
+    event->acceptProposedAction();
+}
+
+void QtNodes::GraphicsView::dragMoveEvent(QDragMoveEvent *event)
+{
+    event->acceptProposedAction();
+}
+
+void QtNodes::GraphicsView::dropEvent(QDropEvent *event)
+{
+    Q_EMIT dropObject(event->posF(), event->mimeData()->data("path"));
+    event->acceptProposedAction();
 }
 
 BasicGraphicsScene *GraphicsView::nodeScene()

@@ -144,6 +144,11 @@ QMenu *DataFlowGraphicsScene::createSceneMenu(QPointF const scenePos)
     return modelMenu;
 }
 
+void DataFlowGraphicsScene::addNode(const QString &name, const QPointF &pos)
+{
+    this->undoStack().push(new CreateCommand(this, name, pos));
+}
+
 void DataFlowGraphicsScene::save() const
 {
     QString fileName = QFileDialog::getSaveFileName(nullptr,
