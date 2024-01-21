@@ -25,7 +25,7 @@ public:
 public:
     QMenu *createSceneMenu(QPointF const scenePos) override;
 
-    void addNode(const QString& name, const QPointF& pos);
+    NodeId addNode(const QString& name, const QPointF& pos);
 
 public Q_SLOTS:
     void save() const;

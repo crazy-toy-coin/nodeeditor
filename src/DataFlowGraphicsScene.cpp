@@ -144,9 +144,11 @@ QMenu *DataFlowGraphicsScene::createSceneMenu(QPointF const scenePos)
     return modelMenu;
 }
 
-void DataFlowGraphicsScene::addNode(const QString &name, const QPointF &pos)
+NodeId DataFlowGraphicsScene::addNode(const QString &name, const QPointF &pos)
 {
-    this->undoStack().push(new CreateCommand(this, name, pos));
+    auto createCmd = new CreateCommand(this, name, pos);
+    this->undoStack().push(createCmd);
+    return createCmd->nodeId();
 }
 
 void DataFlowGraphicsScene::save() const

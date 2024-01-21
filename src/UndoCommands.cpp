@@ -154,6 +154,11 @@ void CreateCommand::redo()
     insertSerializedItems(_sceneJson, _scene);
 }
 
+const NodeId &CreateCommand::nodeId() const
+{
+    return _nodeId;
+}
+
 //-------------------------------------
 
 DeleteCommand::DeleteCommand(BasicGraphicsScene *scene)
