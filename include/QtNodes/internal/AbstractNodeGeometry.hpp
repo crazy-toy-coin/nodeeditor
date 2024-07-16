@@ -74,6 +74,12 @@ public:
 
 protected:
     AbstractGraphModel &_graphModel;
+
+    const unsigned int widget_spacing_ = 10;
+    const unsigned int title_bar_height_ = 30;
+
+public:
+    int title_bar_height() const { return title_bar_height_; }
 };
 
 } // namespace QtNodes

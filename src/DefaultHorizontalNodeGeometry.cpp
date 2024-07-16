@@ -33,7 +33,7 @@ void DefaultHorizontalNodeGeometry::recomputeSize(NodeId const nodeId) const
     unsigned int height = maxVerticalPortsExtent(nodeId);
 
     if (auto w = _graphModel.nodeData<QWidget *>(nodeId, NodeRole::Widget)) {
-        height = std::max(height, static_cast<unsigned int>(w->height()));
+        height += std::max(height, static_cast<unsigned int>(w->height()));
     }
 
     QRectF const capRect = captionRect(nodeId);
@@ -43,13 +43,16 @@ void DefaultHorizontalNodeGeometry::recomputeSize(NodeId const nodeId) const
     height += _portSpasing; // space above caption
     height += _portSpasing; // space below caption
 
+    height += title_bar_height_ + _portSpasing;
+
     unsigned int inPortWidth = maxPortsTextAdvance(nodeId, PortType::In);
     unsigned int outPortWidth = maxPortsTextAdvance(nodeId, PortType::Out);
 
     unsigned int width = inPortWidth + outPortWidth + 4 * _portSpasing;
 
     if (auto w = _graphModel.nodeData<QWidget *>(nodeId, NodeRole::Widget)) {
-        width += w->width();
+        // width += w->width();
+        width = std::max(width, static_cast<unsigned int>(w->width() + (2 * widget_spacing_)));
     }
 
     width = std::max(width, static_cast<unsigned int>(capRect.width()) + 2 * _portSpasing);
@@ -95,6 +98,8 @@ QPointF DefaultHorizontalNodeGeometry::portPosition(NodeId const nodeId,
     default:
         break;
     }
+
+    result.setY(result.y() + title_bar_height_);
 
     return result;
 }
@@ -148,17 +153,18 @@ QPointF DefaultHorizontalNodeGeometry::widgetPosition(NodeId const nodeId) const
 {
     QSize size = _graphModel.nodeData<QSize>(nodeId, NodeRole::Size);
 
-    unsigned int captionHeight = captionRect(nodeId).height();
+    // unsigned int captionHeight = captionRect(nodeId).height() + title_bar_height_;
+    unsigned int captionHeight = captionRect(nodeId).height() + maxVerticalPortsExtent(nodeId) + (2 * _portSpasing) + title_bar_height_;
+
+    float x = widget_spacing_; // 2.0 * _portSpasing + maxPortsTextAdvance(nodeId, PortType::In);
 
     if (auto w = _graphModel.nodeData<QWidget *>(nodeId, NodeRole::Widget)) {
         // If the widget wants to use as much vertical space as possible,
         // place it immediately after the caption.
+            return QPointF(x, captionHeight);
         if (w->sizePolicy().verticalPolicy() & QSizePolicy::ExpandFlag) {
-            return QPointF(2.0 * _portSpasing + maxPortsTextAdvance(nodeId, PortType::In),
-                           captionHeight);
         } else {
-            return QPointF(2.0 * _portSpasing + maxPortsTextAdvance(nodeId, PortType::In),
-                           (captionHeight + size.height() - w->height()) / 2.0);
+            return QPointF(x, (captionHeight + size.height() - w->height()) / 2.0);
         }
     }
     return QPointF();

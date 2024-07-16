@@ -117,6 +117,11 @@ Q_SIGNALS:
 
     void connectionHoverLeft(ConnectionId const connectionId);
 
+    void nodeHoverMove(NodeId const nodeId);
+
+    void nodePressed(NodeId const nodeId);
+
+    void nodeReleased(NodeId const nodeId);
     /// Signal allows showing custom context menu upon clicking a node.
     void nodeContextMenu(NodeId const nodeId, QPointF const pos);
 
@@ -173,6 +178,9 @@ private:
     QUndoStack *_undoStack;
 
     Qt::Orientation _orientation;
+
+private:
+    virtual void onNodeObjectCreated(std::unique_ptr< NodeGraphicsObject >& object);
 };
 
 } // namespace QtNodes

@@ -251,7 +251,14 @@ void BasicGraphicsScene::onNodeDeleted(NodeId const nodeId)
 
 void BasicGraphicsScene::onNodeCreated(NodeId const nodeId)
 {
-    _nodeGraphicsObjects[nodeId] = std::make_unique<NodeGraphicsObject>(*this, nodeId);
+    auto object = std::make_unique<NodeGraphicsObject>(*this, nodeId);
+    onNodeObjectCreated(object);
+    _nodeGraphicsObjects[nodeId] = std::move(object);
+}
+
+void BasicGraphicsScene::onNodeObjectCreated(std::unique_ptr< NodeGraphicsObject >& object)
+{
+    Q_UNUSED(object)
 }
 
 void BasicGraphicsScene::onNodePositionUpdated(NodeId const nodeId)

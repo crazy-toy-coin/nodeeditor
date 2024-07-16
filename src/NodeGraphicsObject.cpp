@@ -231,6 +231,8 @@ void NodeGraphicsObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (isSelected()) {
         Q_EMIT nodeScene()->nodeSelected(_nodeId);
     }
+
+    Q_EMIT nodeScene()->nodePressed(_nodeId);
 }
 
 void NodeGraphicsObject::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -293,6 +295,8 @@ void NodeGraphicsObject::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     moveConnections();
 
     nodeScene()->nodeClicked(_nodeId);
+
+    Q_EMIT nodeScene()->nodeReleased(_nodeId);
 }
 
 void NodeGraphicsObject::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
@@ -344,6 +348,8 @@ void NodeGraphicsObject::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
     } else {
         setCursor(QCursor());
     }
+
+    Q_EMIT nodeScene()->nodeHoverMove(_nodeId);
 
     event->accept();
 }
