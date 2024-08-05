@@ -27,8 +27,11 @@ public:
 
     NodeId addNode(const QString& name, const QPointF& pos);
 
+    virtual void saveToFile(const QString& file) const;
+    virtual void loadFromFile(const QString& file);
+
 public Q_SLOTS:
-    void save() const;
+    QString save() const;
 
     void load();
 

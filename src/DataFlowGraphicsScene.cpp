@@ -151,7 +151,7 @@ NodeId DataFlowGraphicsScene::addNode(const QString &name, const QPointF &pos)
     return createCmd->nodeId();
 }
 
-void DataFlowGraphicsScene::save() const
+QString DataFlowGraphicsScene::save() const
 {
     QString fileName = QFileDialog::getSaveFileName(nullptr,
                                                     tr("Open Flow Scene"),
@@ -167,6 +167,8 @@ void DataFlowGraphicsScene::save() const
             file.write(QJsonDocument(_graphModel.save()).toJson());
         }
     }
+
+    return fileName;
 }
 
 void DataFlowGraphicsScene::load()
@@ -187,6 +189,38 @@ void DataFlowGraphicsScene::load()
     clearScene();
 
     QByteArray const wholeFile = file.readAll();
+
+    _graphModel.load(QJsonDocument::fromJson(wholeFile).object());
+
+    Q_EMIT sceneLoaded();
+}
+
+void DataFlowGraphicsScene::saveToFile(const QString& file) const
+{
+    auto f = file;
+    if (!f.isEmpty()) {
+        if (!f.endsWith("flow", Qt::CaseInsensitive))
+            f += ".flow";
+
+        QFile file(f);
+        if (file.open(QIODevice::WriteOnly)) {
+            file.write(QJsonDocument(_graphModel.save()).toJson());
+        }
+    }
+}
+void DataFlowGraphicsScene::loadFromFile(const QString& file)
+{
+    if (!QFileInfo::exists(file))
+        return;
+
+    QFile f(file);
+
+    if (!f.open(QIODevice::ReadOnly))
+        return;
+
+    clearScene();
+
+    QByteArray const wholeFile = f.readAll();
 
     _graphModel.load(QJsonDocument::fromJson(wholeFile).object());
 
